@@ -1,98 +1,42 @@
-# Contexte : appli d'anglais CM2
+# Contexte du projet : Mon voyage
 
-## Le projet
+> Point d'entrée pour une nouvelle session. Mis à jour le 2026-11-08.
+> Détails : [architecture](contexte/architecture.md) · [exploitation](contexte/exploitation.md) (builds, déploiements, services, comptes) · [historique](contexte/historique.md) (versions, pièges déjà rencontrés) · [décisions (ADR)](ADR/).
 
-- **Utilisatrice** : une élève de CM2 (10-11 ans), qui part de zéro en anglais.
-- **Objectif** : la préparer à un séjour dans une famille en Angleterre l'année prochaine.
-- **Principe** : une IA vocale qui montre l'exemple et corrige la prononciation.
-- **Cadre** : projet IUT pour un vrai client, à réaliser en une semaine.
-- **Support** : appli native pour tablette et téléphone, sur iOS et Android.
+## Le produit
 
----
+- **Mon voyage** (anciennement « Mon voyage en Angleterre ») : une appli mobile Expo / React Native pour apprendre une langue **à l'oral** avant un séjour à l'étranger.
+- **Pour qui** : au départ, une élève de CM2 (10-11 ans), débutante complète, qui part dans une famille en Angleterre. Le client est réel.
+- **Cadre** : projet BUT MMI, IUT du Puy-en-Velay. Développeur : **BONNE Morgan** (GitHub `cubixoBG`, e-mail `cubixo2302@gmail.com`).
+- **Hébergement** : l'**appli** sera « prochainement hébergée grâce à Oktopod » (l'agence est propriétaire du projet Expo). Le **site** n'est pas hébergé par Oktopod : il est sur le Hostinger de Morgan.
+- **Langues** : anglais, espagnol, allemand, italien. L'enfant choisit au premier lancement, avec son prénom. Chaque langue a sa voix, ses mots, ses autocollants et son passeport.
 
-## Le fil rouge : « Mon voyage en Angleterre »
+## Le principe pédagogique
 
-L'appli suit le voyage, étape par étape. Chaque étape est une partie de l'Angleterre à débloquer pour la progression.
+- Un **écureuil roux** compagnon dit le mot, l'enfant répète, et l'écureuil donne un retour **toujours positif** (« Presque ! », « Encore une fois ? », jamais « faux »).
+- Une **séance** = 3 activités : *Écouter et répéter* (learn), *Memory* (memory), *Le perroquet* (parrot). Séance finie → **1 autocollant** dans le **passeport**.
+- **Le voyage** : 9 étapes (Les présentations, L'aéroport, La famille, À table, La journée, Sortir, Jouer, Les urgences, La culture). **Seules les 2 premières ont des mots** (20 chacune). On change d'étape tous les 3 autocollants. On peut réviser une étape passée, sans gagner d'autocollant.
+- Rappel quotidien par notification à 15 h 45, avec le prénom.
 
-1. **Les présentations** : dire son nom, son âge, d'où on vient, sa famille, ses animaux
-2. **L'aéroport et le trajet** : dire bonjour, merci, demander de l'aide
-3. **Arriver dans la famille** : la maison, sa chambre, les règles de la maison
-4. **À table** : la nourriture, dire ce qu'on aime / n'aime pas, « Can I have… ? », « I'm full »
-5. **La journée** : se lever, se laver, s'habiller, l'heure
-6. **Sortir** : les magasins, l'argent (livres, pence), le parc, les directions
-7. **Jouer avec les enfants** : les jeux, le sport, les loisirs
-8. **Les urgences** : « I don't feel well », « I'm lost », « Can I call my mum? »
-9. **La culture** : le thé, les fêtes, les différences avec la France
+## Où on en est (2026-11-08)
 
----
+- **Version courante du code : 1.2.0** (« Une vraie voix pour l'écureuil ») : voix IA Okto en streaming, via le relais du site. Sur le site, elle est marquée « BIENTÔT ». La version « ACTUELLE » téléchargeable reste la **1.1.2**.
+- **Package** : `fr.morganbonne.monvoyage`. Projet Expo **`@oktopod/monvoyage`** (`d216eef1-5d85-41d0-9776-688cde40354b`). L'ancien projet a été supprimé (voir [ADR 0009](ADR/0009-package-et-projet-expo.md)).
+- **Builds** : un build Android production (AAB) a été lancé le 2026-11-06 ; sa réussite n'a pas été vérifiée. Le build iOS demande une connexion Apple interactive : c'est à Morgan de le lancer. Les stores ne sont pas configurés (pas de `submit`).
+- **Voix** : il faut la variable `OKTO_VOICE_KEY` sur Hostinger. Le 2026-11-06, `/api/voix` répondait encore 503 « Voix non configurée » : à vérifier avant tout test.
+- **Git** : le travail se fait sur `dev`. Le dépôt GitHub s'appelle `cubixoBG/mon_voyage` (renommé depuis `Appli_anglais_kid` ; le dossier local garde l'ancien nom). GitLab est prévu mais pas encore créé ; [.gitlab-ci.yml](../.gitlab-ci.yml) est prêt.
 
-## Le compagnon IA
+## Ce qui reste à faire (idées du cahier des charges, pas encore faites)
 
-- **Un écureuil roux** qui parle, encourage et corrige.
-- **Écouter → répéter → retour** : l'écureuil dit le mot, l'élève le répète, puis il donne un retour simple (« Presque ! Écoute encore le *th* »).
-- **Mode lent** : rejouer un mot ou une phrase au ralenti, syllabe par syllabe.
-- **Retours toujours positifs** : jamais de « faux » sec ; on dit « Encore une fois ? » et on valorise les progrès.
-- **Mini-conversations jouées** : l'IA peut aussi jouer la mère d'accueil (« Hello! Are you hungry? ») et l'élève répond à l'oral. Les scénarios sont fermés et courts au début, plus libres ensuite.
-- **Accent britannique** par défaut.
+- Les étapes 3 à 9 (mots à écrire dans `app/src/data.ts`, pour les 4 langues).
+- Les autres jeux : Simon says, Le chef anglais, Valise à faire, Cherche dans la maison, Chanson karaoké, Défi du jour.
+- L'espace parents : suivi du temps et des mots difficiles, phrases de survie imprimables, durée de séance réglable (5, 10, 15 ou 20 min).
+- Les mini-conversations jouées (l'IA joue la mère d'accueil). Okto n'a pas d'API de texte : il faudrait un LLM, appelé par le relais du site.
+- La publication sur les stores : politique de confidentialité, fiche, captures, règles « Familles » (Google) et catégorie « Enfants » (Apple).
 
----
+## Règles produit à respecter
 
-## Les jeux
-
-| Jeu | Principe | Compétence |
-|---|---|---|
-| **Memory sonore** | Retourner des cartes : associer l'image et le mot entendu | Vocabulaire, écoute |
-| **Le perroquet** | Répéter le mieux possible une série de mots | Prononciation |
-| **Simon says** | « Simon says touch your nose » : mimer ou cliquer la bonne image | Compréhension orale |
-| **Le chef anglais** | Préparer un repas en glissant les bons ingrédients demandés | Vocabulaire de la nourriture |
-| **Valise à faire** | Mettre dans la valise ce que l'IA demande (« a toothbrush, two T-shirts ») | Objets, nombres |
-| **Cherche dans la maison** | Dans une maison dessinée, trouver « the kitchen », « under the bed » | Pièces, prépositions |
-| **Chanson karaoké** | Chansons simples avec les paroles surlignées | Rythme, mémorisation |
-| **Défi du jour** | Une phrase utile à apprendre et à dire au début de chaque séance | Régularité |
-
----
-
-## La motivation
-
-- **Séance courte** : 10 minutes par défaut (durée réglable par les parents).
-- **Un autocollant par séance** : à la fin de la séance, l'enfant gagne un autocollant à collectionner (bus rouge, cabine téléphonique, Big Ben…).
-- **Le passeport** : chaque autocollant gagné va dans le passeport, qui se remplit page après page.
-
----
-
-## Le design
-
-- Boutons et icônes plus gros que d'habitude, peu de texte par écran
-- **Consignes lues à voix haute** en anglais, avec sous-titres
-- Une seule action principale par écran
-- Couleurs vives mais contrastées (lisibilité, accessibilité)
-- Police lisible, adaptée à l'apprentissage de la lecture (ex. Andika, Lexend)
-- Gros bouton micro pour parler, avec un retour visuel quand l'IA écoute
-
----
-
-## L'espace parents
-
-- **Tableau de suivi simple** : temps passé, étapes faites, mots qui posent problème
-- **Liste « phrases de survie »** imprimable pour le séjour
-- **Réglages** : durée de la séance quotidienne (5, 10, 15 ou 20 minutes)
-
----
-
-## Points d'attention
-
-- **Données d'une mineure** : la voix d'une enfant est une donnée personnelle (RGPD). Pas de compte avec des données réelles, pas de stockage des enregistrements, ou alors avec l'accord des parents et une suppression facile.
-- **IA encadrée** : les conversations libres doivent rester dans un cadre sûr (sujets limités, filtrage, pas de lien externe).
-- **Reconnaissance vocale des voix d'enfants** : souvent moins fiable qu'avec des adultes. À tester tôt, et prévoir une notation tolérante.
-- **Coût de l'IA vocale** : la synthèse et la reconnaissance vocales via une API coûtent à l'usage. Pour le vocabulaire fixe, on peut générer les audios une seule fois à l'avance.
-
----
-
-## Première version (MVP)
-
-1. L'écureuil compagnon et l'étape **« Les présentations »**
-2. Écouter / répéter, avec retour de prononciation sur une vingtaine de mots et de phrases
-3. Deux jeux : **Memory sonore** et **Le perroquet**
-4. La séance qui donne un autocollant à coller dans le passeport
-
-Ensuite, on ajoute les étapes du voyage une par une.
+- **Données d'enfants (RGPD)** : pas de compte, pas d'enregistrement de la voix. La reconnaissance se fait sur le téléphone. Seuls le prénom, la langue et les autocollants sont stockés, localement. Le texte à dire part chez Okto (moteur Gemini, sans rétention).
+- Retours bienveillants, notation tolérante (les voix d'enfants sont mal reconnues).
+- Gros boutons, peu de texte, une action principale par écran, **tout tient sur un écran sans défiler**, police Lexend.
+- Sous-titres en français sous chaque phrase dans la langue apprise.
